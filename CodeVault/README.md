@@ -2,26 +2,6 @@
 
 The `CodeVault` class provides a system for managing redeemable codes in Roblox. This API allows for code generation, redemption, management, and data storage.
 
-## Table of Contents
-
-- [CodeVault Overview](#codevault-overview)
-- [Type Definitions](#type-definitions)
-- [Functions](#functions)
-  - [CodeVault.new](#codevaultnew)
-  - [CodeVault:GenerateCode](#codevaultgeneratecode)
-  - [CodeVault:RedeemCode](#codevaultredeemcode)
-  - [CodeVault:DeleteCode](#codevaultdeletecode)
-  - [CodeVault:IsCodeExpired](#codevaultiscodeexpired)
-  - [CodeVault:GetCodeInfo](#codevaultgetcodeinfo)
-  - [CodeVault:GetRemainingRedeemTimes](#codevaultgetremainingredeemtimes)
-  - [CodeVault:ClearExpiredCodes](#codevaultclearexpiredcodes)
-  - [CodeVault:_SaveCodes](#codevault_savecodes)
-  - [CodeVault:_LoadCodes](#codevault_loadcodes)
-  - [CodeVault:UpdateCodeDetails](#codevaultupdatecodedetails)
-  - [CodeVault:ListCodes](#codevaultlistcodes)
-  - [CodeVault:CountTotalCodes](#codevaultcounttotalcodes)
-  - [CodeVault:GetRedeemersList](#codevaultgetredeemerslist)
-
 ## CodeVault Overview
 
 `CodeVault` is a class used to handle redeemable codes for various purposes, such as promotions or rewards. It uses Roblox's `DataStoreService` to persist code data between sessions.
