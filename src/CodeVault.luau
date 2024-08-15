@@ -37,15 +37,20 @@ function CodeVault.new(): CodeVault
 end
 
 function CodeVault:GenerateCode(codeStr: string, redeemTimes: number?, expirationTime: number?): Code
-	local code: Code = {
-		RedeemTimes = redeemTimes or -1,
-		ExpirationTime = expirationTime or -1,
-		Redeemers = {},
-	}
-	self.Codes[codeStr] = code
-	self:_SaveCodes()
-	return code
+    if self.Codes[codeStr] then
+        warn("Code already exists: " .. codeStr)
+        return self.Codes[codeStr]
+    end
+    local code: Code = {
+        RedeemTimes = redeemTimes or -1,
+        ExpirationTime = expirationTime or -1,
+        Redeemers = {},
+    }
+    self.Codes[codeStr] = code
+    self:_SaveCodes()
+    return code
 end
+
 
 function CodeVault:RedeemCode(plr: Player, codeStr: string): (boolean, string)
 	local code = self.Codes[codeStr]
