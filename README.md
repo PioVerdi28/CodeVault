@@ -1,10 +1,10 @@
 # CodeVault API Documentation
 
-The `CodeVault` class provides a system for managing redeemable codes in Roblox. This API allows for code generation, redemption, management, and data storage.
+The `CodeVault` module provides a system for managing redeemable codes in Roblox. This API allows for code generation, redemption, management, and data storage.
 
 ## CodeVault Overview
 
-`CodeVault` is a class used to handle redeemable codes for various purposes, such as promotions or rewards. It uses Roblox's `DataStoreService` to persist code data between sessions.
+`CodeVault` is a module used to handle redeemable codes for various purposes, such in-game rewards. It uses Roblox's `DataStoreService` to persist code data between sessions.
 
 ## Type Definitions
 
