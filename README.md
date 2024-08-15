@@ -6,6 +6,8 @@ The `CodeVault` module provides a system for managing redeemable codes in Roblox
 
 `CodeVault` is a module used to handle redeemable codes for various purposes, such in-game rewards. It uses Roblox's `DataStoreService` to persist code data between sessions.
 
+You can aswell set a reedem limit, expiration time, and more automatically!
+
 ## Type Definitions
 
 ### `Code`
