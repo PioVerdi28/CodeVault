@@ -34,6 +34,8 @@ Generates a new code and adds it to the vault. Optional parameters:
 - `redeemTimes`: Maximum number of times the code can be redeemed.
 - `expirationTime`: Timestamp at which the code will expire.
 
+**NOTE:** The `expirationTime` works with `tick()`. Correct format of usage: `tick()` and operator and time. (Ex: `tick() + 3600`) --1 hour duration
+
 ### `CodeVault:RedeemCode(plr: Player, codeStr: string) -> (boolean, string)`
 
 Redeems a code for a player. Returns a tuple where:
