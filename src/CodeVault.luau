@@ -53,14 +53,31 @@ end
 
 
 function CodeVault:RedeemCode(plr: Player, codeStr: string): (boolean, string)
-	local code = self.Codes[codeStr]
-	if not code then return false, "Invalid code." end
-	if code.ExpirationTime ~= -1 and tick() > code.ExpirationTime then return false, "Code has expired." end
-	if code.RedeemTimes ~= -1 and #code.Redeemers >= code.RedeemTimes then return false, "Code fully redeemed." end
-	if table.find(code.Redeemers, plr.UserId) then return false, "Already redeemed." end
-	table.insert(code.Redeemers, plr.UserId)
-	self:_SaveCodes()
-	return true, "Code redeemed successfully!"
+    local success, result = pcall(function()
+        return CodeDataStore:UpdateAsync("Codes", function(currentCodes)
+            local code = currentCodes[codeStr]
+            if not code then
+                return nil, "Invalid code."
+            end
+            if code.ExpirationTime ~= -1 and tick() > code.ExpirationTime then
+                return nil, "Code has expired."
+            end
+            if code.RedeemTimes ~= -1 and #code.Redeemers >= code.RedeemTimes then
+                return nil, "Code fully redeemed."
+            end
+            if table.find(code.Redeemers, plr.UserId) then
+                return nil, "Already redeemed."
+            end
+            table.insert(code.Redeemers, plr.UserId)
+            return currentCodes, "Code redeemed successfully!"
+        end)
+    end)
+
+    if not success then
+        return false, "Failed to redeem code."
+    end
+
+    return result ~= nil, result or "Code redeemed successfully!"
 end
 
 function CodeVault:DeleteCode(codeStr: string)
