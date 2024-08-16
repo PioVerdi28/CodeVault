@@ -3,7 +3,6 @@ export type Code = {
 	ExpirationTime: number,
 	Redeemers: {number},
 }
-
 export type CodeVault = {
 	Codes: {[string]: Code},
 	new: () -> CodeVault,
@@ -37,48 +36,43 @@ function CodeVault.new(): CodeVault
 end
 
 function CodeVault:GenerateCode(codeStr: string, redeemTimes: number?, expirationTime: number?): Code
-    if self.Codes[codeStr] then
-        warn("Code already exists: " .. codeStr)
-        return self.Codes[codeStr]
-    end
-    local code: Code = {
-        RedeemTimes = redeemTimes or -1,
-        ExpirationTime = expirationTime or -1,
-        Redeemers = {},
-    }
-    self.Codes[codeStr] = code
-    self:_SaveCodes()
-    return code
+	if self.Codes[codeStr] then
+		warn("Code already exists: " .. codeStr)
+		return self.Codes[codeStr]
+	end
+	local code: Code = {
+		RedeemTimes = redeemTimes or -1,
+		ExpirationTime = expirationTime or -1,
+		Redeemers = {},
+	}
+	self.Codes[codeStr] = code
+	self:_SaveCodes()
+	return code
 end
-
 
 function CodeVault:RedeemCode(plr: Player, codeStr: string): (boolean, string)
-    local success, result = pcall(function()
-        return CodeDataStore:UpdateAsync("Codes", function(currentCodes)
-            local code = currentCodes[codeStr]
-            if not code then
-                return nil, "Invalid code."
-            end
-            if code.ExpirationTime ~= -1 and tick() > code.ExpirationTime then
-                return nil, "Code has expired."
-            end
-            if code.RedeemTimes ~= -1 and #code.Redeemers >= code.RedeemTimes then
-                return nil, "Code fully redeemed."
-            end
-            if table.find(code.Redeemers, plr.UserId) then
-                return nil, "Already redeemed."
-            end
-            table.insert(code.Redeemers, plr.UserId)
-            return currentCodes, "Code redeemed successfully!"
-        end)
-    end)
+	local code = self.Codes[codeStr]
+	if not code then return false, "Invalid code." end
 
-    if not success then
-        return false, "Failed to redeem code."
-    end
+	if code.ExpirationTime ~= -1 and tick() > code.ExpirationTime then return false, "Code has expired." end
+	if code.RedeemTimes ~= -1 and #code.Redeemers >= code.RedeemTimes then return false, "Code fully redeemed." end
+	if table.find(code.Redeemers, plr.UserId) then return false, "Already redeemed." end
 
-    return result ~= nil, result or "Code redeemed successfully!"
+	local success, err = pcall(function()
+		local code = self.Codes[codeStr]
+		if not code then return false, "Invalid code." end
+		if code.ExpirationTime ~= -1 and tick() > code.ExpirationTime then return false, "Code has expired." end
+		if code.RedeemTimes ~= -1 and #code.Redeemers >= code.RedeemTimes then return false, "Code fully redeemed." end
+		if table.find(code.Redeemers, plr.UserId) then return false, "Already redeemed." end
+
+		table.insert(code.Redeemers, plr.UserId)
+		self:_SaveCodes()
+	end)
+
+	if not success then return false, "Failed to redeem code: " .. err end
+	return true, "Code redeemed successfully!"
 end
+
 
 function CodeVault:DeleteCode(codeStr: string)
 	if self.Codes[codeStr] then
